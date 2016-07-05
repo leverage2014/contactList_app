@@ -63,4 +63,8 @@ contactListApp.controller('listCtrl', ['$scope', function($scope){
     	$scope.addFlag = true;
     };
 
+    $scope.deselect = function(){
+    	$scope.contact = null;
+    }
+
 }]);
