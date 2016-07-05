@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
@@ -57,7 +58,36 @@ app.get('/contacts', function(req, res){
 
 // // Add new contact
 // // post /contacts
+app.post('/contacts', function(req, res){
+   var body = _.pick(req.body, 'name', 'email', 'number');
+   console.log(body.name);
 
+   contactListModel.find({name: body.name}, function(err, contact){
+		if(err){
+			res.status(500).send();
+		}else{
+			if(_.isEmpty(contact)){
+			   
+				var contactEntity = new contactListModel({
+					name: body.name,
+					email: body.email,
+					number: body.email
+				});
+
+				contactEntity.save(function(err, contact){
+					if(err){
+						res.status(500).send();
+					}else{
+						res.json(contact);
+					}
+				});
+
+		    }else{
+			   res.status(401).send('duplicated name found!');
+		    }
+		}	
+ 	});
+});
 
 // // Update contact info
 // // put /contacts/:id
