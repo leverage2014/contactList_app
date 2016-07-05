@@ -91,8 +91,34 @@ app.post('/contacts', function(req, res){
 
 // // Update contact info
 // // put /contacts/:id
+app.put('/contacts/:id', function(req, res){
+    
+    var recordId = req.params.id;
+    var body = _.pick(req.body, 'name', 'email', 'number');
 
+    contactListModel.find({_id: recordId}, function(err, contact){
+    	if(err){
+    		res.status(500).send();
+    	} else {
+    		contactListModel.update(
+    			{_id:recordId},
+    			{$set:
+    				{
+    					name: body.name,
+    					email: body.email,
+    					number: body.number
+    				}
+    			},function(err){
+    				res.status(500).send();
+    			});
+    		res.json(body);
+    	}	
+    });
+});
 
 // // Delete one contact
 // // delete /contacts/:id
+app.delete('/contacts/:id', function(req, res){
+
+});
 
