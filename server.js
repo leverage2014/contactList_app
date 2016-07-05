@@ -120,5 +120,13 @@ app.put('/contacts/:id', function(req, res){
 // // delete /contacts/:id
 app.delete('/contacts/:id', function(req, res){
 
+	var recordId = req.params.id;
+	contactListModel.remove({_id: recordId}, function(err, result){
+		if(err){
+			res.status(500).send();
+		}else{
+			res.json(result);
+		}
+	 });
 });
 
