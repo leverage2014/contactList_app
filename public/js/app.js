@@ -1,30 +1,18 @@
 var contactListApp = angular.module('contactListApp', []);
 
-contactListApp.controller('listCtrl', ['$scope', function($scope){
+contactListApp.controller('listCtrl', ['$scope', '$http', function($scope, $http){
 	$scope.greeting = 'Contact List App';
 	$scope.addFlag = false;
 
-	var person1 = {
-        name: 'Time',
-        email: 'tim@gmail.com',
-        number: '(111)-111-1111'
-    };
-    
-    var person2 = {
-        name: 'Emily',
-        email: 'emily@gmail.com',
-        number: '(222)-222-2222'
-    };
-    
-    var person3 = {
-        name: 'John',
-        email: 'john@gmail.com',
-        number: '(333)-333-3333'
-    };
-    
-    var contactlist = [person1, person2, person3];
-    
-    $scope.contactList = contactlist;
+	$scope.getData = function(){
+        $http.get('/contacts').success(function (response) {
+            console.log("i got the data from server: \n");
+            console.log(response);
+            $scope.contactList = response;
+        });
+	}
+
+	$scope.getData();
 
     $scope.addContact = function(){
     	var newContact = $scope.contact;
