@@ -12,13 +12,17 @@
   "license": "ISC",
   "dependencies": {
     "angular": "^1.5.7",
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "mongoose": "^4.5.3",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "angular-mocks": "^1.5.7",
+    "body-parser": "^1.15.2",
     "jasmine": "^2.4.1",
     "karma": "^1.1.0",
     "karma-jasmine": "^1.0.2",
-    "karma-phantomjs-launcher": "^1.0.1"
+    "karma-phantomjs-launcher": "^1.0.1",
+    "nodemon": "^1.9.2"
   }
 }
