@@ -3,57 +3,28 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 
+var mydb = require('./db')();
+var util = require('./util')();
+
+var db = mydb.db;
+var contactsModel = mydb.contactListModel;
+var userModel = mydb.userModel;
+var tokenModel = mydb.tokenModel;
+
 var PORT = process.env.PORT || 3000;
 app.use('/', express.static(__dirname + '/public'));
 app.use('/lib', express.static(__dirname + '/node_modules'));
 app.use(bodyParser.json());
 
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-
-// Obtain all connections to the DB
-var connections = mongoose.connect('mongodb://contactList:12345abcde@ds051575.mlab.com:51575/heroku_c0httc0j').connections;
-// Obtain current connection
-var connection = connections[0];
-// Obtain the db;
-var db = connection.db;
-
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log('We are connected');
-
+  
   app.listen(PORT, function(){
-	console.log('Server is running at port: ' + PORT);
+  	console.log('Server is running at port: ' + PORT);
   });
 
 });
-
-// define contact schema
-var contactSchema = new Schema({
-	name: String,
-	email: String,
-	number: String,
-	userId: String
-});
-
-// define user schema
-var userSchema = new Schema({
-	email: String,
-	password_hash: String,
-	salt: String
-});
-
-// define token schema
-var tokenSchema = new Schema({
-	tokenHash: String
-});
-
-// pubish the schema as model, will create a collection with name 'contacts'
-var contactListModel = mongoose.model('contact', contactSchema);
-// pubish the schema as model, will create a collection with name 'users'
-var userModel = mongoose.model('user', userSchema);
-// pubish the schema as model, will create a collection with name 'tokens'
-var tokenModel = mongoose.model('token', tokenSchema);
 
 app.get('/', function(req, res){
 	console.log('GET request received!');
@@ -158,16 +129,19 @@ app.post('/users', function(req, res){
 		}else{
 			if(_.isEmpty(user)){
 			   
+			   var encryptedPwd = util.encryptPassword(body.password);
+
 				var userEntity = new userModel({
 					email: body.email,
-					password: body.password  // plain-text password!
+					password_hash: encryptedPwd.hashedPassword,
+					salt: encryptedPwd.salt
 				});
 
 				userEntity.save(function(err, user){
 					if(err){
 						res.status(500).send();
 					}else{
-						res.json(user);
+						res.json(util.toPublicJSON(user));
 					}
 				});
 
@@ -180,7 +154,15 @@ app.post('/users', function(req, res){
 
 // POST /users/login
 app.post("/users/login", function(req, res){
+
 	var body = _.pick(req.body, 'email', 'password');
+
+	util.authenticated(body, userModel).then(function(user){
+		console.log('verified');
+		res.json(util.toPublicJSON(user));
+	}, function(err){
+		res.status(401).send();
+	});
 
 });
 
