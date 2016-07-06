@@ -28,15 +28,32 @@ db.once('open', function() {
 
 });
 
-// define a schema
+// define contact schema
 var contactSchema = new Schema({
 	name: String,
 	email: String,
-	number: String
+	number: String,
+	userId: String
+});
+
+// define user schema
+var userSchema = new Schema({
+	email: String,
+	password_hash: String,
+	salt: String
+});
+
+// define token schema
+var tokenSchema = new Schema({
+	tokenHash: String
 });
 
 // pubish the schema as model, will create a collection with name 'contacts'
 var contactListModel = mongoose.model('contact', contactSchema);
+// pubish the schema as model, will create a collection with name 'users'
+var userModel = mongoose.model('user', userSchema);
+// pubish the schema as model, will create a collection with name 'tokens'
+var tokenModel = mongoose.model('token', tokenSchema);
 
 app.get('/', function(req, res){
 	console.log('GET request received!');
@@ -128,5 +145,42 @@ app.delete('/contacts/:id', function(req, res){
 			res.json(result);
 		}
 	 });
+});
+
+
+// POST /users
+app.post('/users', function(req, res){
+	var body = _.pick(req.body, 'email', 'password');
+
+	userModel.find({email: body.email}, function(err, user){
+		if(err){
+			res.status(500).send();
+		}else{
+			if(_.isEmpty(user)){
+			   
+				var userEntity = new userModel({
+					email: body.email,
+					password: body.password  // plain-text password!
+				});
+
+				userEntity.save(function(err, user){
+					if(err){
+						res.status(500).send();
+					}else{
+						res.json(user);
+					}
+				});
+
+		    }else{
+			   res.status(401).send('duplicated email found!');
+		    }
+		}	
+ 	});
+});
+
+// POST /users/login
+app.post("/users/login", function(req, res){
+	var body = _.pick(req.body, 'email', 'password');
+
 });
 
