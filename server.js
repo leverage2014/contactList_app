@@ -198,6 +198,24 @@ app.post("/users/login", function(req, res){
 	}, function(err){
 		res.status(401).send();
 	});
+});
+
+// DELETE /users/logout
+app.delete('/users/logout', middleware.requireAuthentication, function(req, res){
+	var token = req.get('Auth');
+	if(typeof token === 'undefined'){
+		res.status(401).send();
+	}
+
+	tokenModel.remove({
+		tokenHash: token
+	}, function(err, token){
+		if(err){
+			res.status(500).send();
+		}else{
+			res.json(token);
+		}
+	});
 
 });
 
