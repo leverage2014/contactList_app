@@ -7,9 +7,11 @@ var mydb = require('./db')();
 var util = require('./util')();
 
 var db = mydb.db;
-var contactsModel = mydb.contactListModel;
+var contactListModel = mydb.contactListModel;
 var userModel = mydb.userModel;
 var tokenModel = mydb.tokenModel;
+
+var middleware = require('./middleware')(tokenModel, userModel);
 
 var PORT = process.env.PORT || 3000;
 app.use('/', express.static(__dirname + '/public'));
@@ -26,15 +28,16 @@ db.once('open', function() {
 
 });
 
-app.get('/', function(req, res){
+app.get('/', middleware.requireAuthentication, function(req, res){
 	console.log('GET request received!');
 });
 
 // // Get all contacts info.
 // // get /contacts
-app.get('/contacts', function(req, res){
+app.get('/contacts', middleware.requireAuthentication, function(req, res){
+	var user = req.user;
 
- 	contactListModel.find(function(err, contacts){
+ 	contactListModel.find({userId: user._id}, function(err, contacts){
 		if(err){
 			res.status(401).send();
 		} else {
@@ -46,11 +49,17 @@ app.get('/contacts', function(req, res){
 
 // // Add new contact
 // // post /contacts
-app.post('/contacts', function(req, res){
+app.post('/contacts', middleware.requireAuthentication, function(req, res){
    var body = _.pick(req.body, 'name', 'email', 'number');
    console.log(body.name);
 
-   contactListModel.find({name: body.name}, function(err, contact){
+   var user = req.user;
+   var userId = user._id;
+
+   contactListModel.find({
+   		name: body.name,
+   		userId: userId
+   	}, function(err, contact){
 		if(err){
 			res.status(500).send();
 		}else{
@@ -59,7 +68,8 @@ app.post('/contacts', function(req, res){
 				var contactEntity = new contactListModel({
 					name: body.name,
 					email: body.email,
-					number: body.email
+					number: body.email,
+					userId: user._id
 				});
 
 				contactEntity.save(function(err, contact){
@@ -79,12 +89,18 @@ app.post('/contacts', function(req, res){
 
 // // Update contact info
 // // put /contacts/:id
-app.put('/contacts/:id', function(req, res){
+app.put('/contacts/:id', middleware.requireAuthentication, function(req, res){
     
     var recordId = req.params.id;
     var body = _.pick(req.body, 'name', 'email', 'number');
+    
+    var user = req.user;
+    var userId = user._id;
 
-    contactListModel.find({_id: recordId}, function(err, contact){
+    contactListModel.find({
+    	_id: recordId,
+    	userId: userId
+    }, function(err, contact){
     	if(err){
     		res.status(500).send();
     	} else {
@@ -106,10 +122,17 @@ app.put('/contacts/:id', function(req, res){
 
 // // Delete one contact
 // // delete /contacts/:id
-app.delete('/contacts/:id', function(req, res){
+app.delete('/contacts/:id', middleware.requireAuthentication, function(req, res){
 
 	var recordId = req.params.id;
-	contactListModel.remove({_id: recordId}, function(err, result){
+
+	var user = req.user;
+    var userId = user._id;
+
+	contactListModel.remove({
+		_id: recordId,
+		userId: userId
+	}, function(err, result){
 		if(err){
 			res.status(500).send();
 		}else{
@@ -159,7 +182,19 @@ app.post("/users/login", function(req, res){
 
 	util.authenticated(body, userModel).then(function(user){
 		console.log('verified');
-		res.json(util.toPublicJSON(user));
+		var token = util.generateToken(user._id, 'authentication');
+
+		var tokenEntity = new tokenModel({
+			tokenHash: token
+		});
+		tokenEntity.save(function(err, token){
+			console.log(token);
+			if(err){
+				res.status(500).send();
+			}else{
+				res.header('Auth', token.tokenHash).json(util.toPublicJSON(user));
+			}
+		});
 	}, function(err){
 		res.status(401).send();
 	});
