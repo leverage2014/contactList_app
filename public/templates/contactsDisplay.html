@@ -25,7 +25,7 @@
                     </td>
 
                     <td>
-                        <input name='newContactNumber' class="form-control" ng-model="contact.number" type="number" placeholder="Type contact's phone number" required>
+                        <input name='newContactNumber' class="form-control" ng-model="contact.number" type="text" placeholder="Type contact's phone number" required>
                     </td>
                     <td ng-hide='addFlag'>
                         <button class="btn btn-primary" ng-click='addContact(contact)' ng-disabled="newContactForm.$invalid">Add Contact</button>
