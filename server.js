@@ -51,7 +51,9 @@ app.get('/contacts', middleware.requireAuthentication, function(req, res){
 // // post /contacts
 app.post('/contacts', middleware.requireAuthentication, function(req, res){
    var body = _.pick(req.body, 'name', 'email', 'number');
-   console.log(body.name);
+
+	console.log('添加联系人是:');
+	console.log(body);
 
    var user = req.user;
    var userId = user._id;
@@ -68,7 +70,7 @@ app.post('/contacts', middleware.requireAuthentication, function(req, res){
 				var contactEntity = new contactListModel({
 					name: body.name,
 					email: body.email,
-					number: body.email,
+					number: body.number,
 					userId: user._id
 				});
 
@@ -125,10 +127,12 @@ app.put('/contacts/:id', middleware.requireAuthentication, function(req, res){
 app.delete('/contacts/:id', middleware.requireAuthentication, function(req, res){
 
 	var recordId = req.params.id;
+	console.log('delelte id ==> ' + recordId);
 
 	var user = req.user;
     var userId = user._id;
-
+	console.log('user id ==> ' + userId);
+	
 	contactListModel.remove({
 		_id: recordId,
 		userId: userId
