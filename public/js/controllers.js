@@ -1,11 +1,52 @@
 var appControllers = angular.module('appControllers', ['ui.router', 'ngCookies']);
 
-appControllers.controller('appCtrls', ['$scope', '$http', '$state', '$cookies', function($scope, $http, $state, $cookies){
+appControllers.controller('appCtrls', ['$scope', '$http', '$state', '$cookies', '$interval', function($scope, $http, $state, $cookies, $interval){
 
     $scope.auth = '';
 	$scope.addFlag = false;
 	$scope.contact = {};
     $scope.user = {};
+
+    $scope.stopTimer = function(){
+        $interval.cancel($scope.idleIntervalTimer);
+    }
+    $scope.stopTimer();
+
+    // detect inactivity
+    $scope.idleTime = 0;
+    $(document).mousemove(function (e) {  // reset $scope.idleTime
+        $scope.idleTime = 0;
+    });
+    $(document).keypress(function (e) {  // reset $scope.idleTime
+        $scope.idleTime = 0;
+    });
+
+    $scope.timerIncrement = function () {
+        $scope.idleTime = $scope.idleTime + 1;
+        console.log("idleTime is " + $scope.idleTime);
+
+        if ($scope.idleTime > 5) { // 25 seconds
+            $http({
+                method: "DELETE",
+                url: "/users/logout",
+                headers: {
+                    Auth: $scope.auth,  // add Auth to HTTP header
+                }
+            }).then(function(successRes){
+                $scope.auth = ''
+                $scope.user.email = $cookies.get('email');
+                $scope.user.password = '';
+                alert('You will logout due to no activities!');
+
+                $scope.stopTimer();
+                $state.go('login');
+
+            }, function(failedRes){
+               // alert('The server is busy! Please try again later!');
+            });
+        }
+    }
+
 
     if(typeof $cookies.get('email') !== 'undefined'){
         console.log('getcookies');
@@ -88,6 +129,9 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', '$cookies', 
                 $scope.contact = {};
                 $state.go('contacts');
 
+                // start interval timer to detect inactivity
+                $scope.idleIntervalTimer = $interval($scope.timerIncrement, 5000);  // inteval set to 5s
+
             }, function(failRes){
                 if(parseInt(failRes.status) === 401 ){
                     alert('Email or Password is invalid!');
@@ -123,7 +167,10 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', '$cookies', 
                 $scope.user.email = $cookies.get('email');
                 $scope.user.password = '';
                 $state.go('login');
-             //   alert('You have successfully logout!');
+
+                // stop timer
+                $scope.stopTimer();
+
             }, function(failedRes){
                 alert('The server is busy! Please try again later!');
             });

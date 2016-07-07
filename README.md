@@ -5,7 +5,7 @@
 
 ### To do list:
 * ~~'remember me' in login page~~
+* ~~inactivity detection and automatically logout~~
 * 'forget password' in login page
 * format validation in contacts list
-* inactivity detection and automatically logout
 * delete tokens periodically in db
