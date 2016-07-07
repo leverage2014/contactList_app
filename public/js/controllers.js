@@ -1,11 +1,20 @@
-var appControllers = angular.module('appControllers', ['ui.router']);
+var appControllers = angular.module('appControllers', ['ui.router', 'ngCookies']);
 
-appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($scope, $http, $state){
+appControllers.controller('appCtrls', ['$scope', '$http', '$state', '$cookies', function($scope, $http, $state, $cookies){
 
     $scope.auth = '';
 	$scope.addFlag = false;
 	$scope.contact = {};
+    $scope.user = {};
 
+    if(typeof $cookies.get('email') !== 'undefined'){
+        console.log('getcookies');
+        console.log($cookies.get('email'));
+        $scope.user.email = $cookies.get('email');
+    }
+
+    console.log('cookies: ==>');
+    console.log($cookies.get('email'));
     //  $scope.location = {};
     // $scope.getlocation = function(){
     //     $http.get('http://ipinfo.io').success(function(data){
@@ -42,12 +51,23 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
         $scope.agreeTerm = false; // no effects??
     }
 
-    $scope.login = function(user){
+    $scope.login = function(user, rememberMe){
         console.log('login user');
         console.log(user);
 
         $http.post('/users/login', user).then(function(successRes){
             $scope.auth = successRes.headers().auth;  // obtain Auth info in the HTTP header
+
+            if(rememberMe){                    // click 'remember me' to remember email info
+                console.log('--- remember me ? ----');
+              //  $cookies.put('auth', $scope.auth);
+                $cookies.put('email', user.email);
+                console.log($cookies.get('email'));
+            }
+
+            console.log(rememberMe);
+            console.log('cookies: ==>');
+            console.log($cookies.get('email'));
 
             console.log('===== obtained token ========');
             console.log($scope.auth);
@@ -100,7 +120,9 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
                 }
             }).then(function(successRes){
                 $scope.auth = ''
-                $state.go('home');
+                $scope.user.email = $cookies.get('email');
+                $scope.user.password = '';
+                $state.go('login');
              //   alert('You have successfully logout!');
             }, function(failedRes){
                 alert('The server is busy! Please try again later!');

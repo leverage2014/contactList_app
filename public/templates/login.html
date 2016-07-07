@@ -28,14 +28,13 @@
 
 		<div class="checkbox">
 			<label>
-				<input type="checkbox">Remember me
+				<input type="checkbox" ng-model="rememberMe">Remember me
 			</label>
 		</div>
-
 	</div>
 
 	<div class="modal-footer">
-		<button class="btn btn-primary" type="button" ng-click="login(user)" ng-disabled="loginForm.$invalid">Login</button>
+		<button class="btn btn-primary" type="button" ng-click="login(user, rememberMe)" ng-disabled="loginForm.$invalid">Login</button>
 		<button class="btn btn-warning" type="button" ng-click="reset(user)">Reset</button>
 	</div>
 
