@@ -8,3 +8,4 @@
 * 'forget password' in login page
 * format validation in contacts list
 * inactivity detection and automatically logout
+* delete tokens periodically in db
