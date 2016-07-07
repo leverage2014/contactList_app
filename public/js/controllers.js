@@ -69,18 +69,18 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
                 $state.go('contacts');
 
             }, function(failRes){
-                if(parseInt(failRes.headers().status) === 401 ){
+                if(parseInt(failRes.status) === 401 ){
                     alert('Email or Password is invalid!');
-                } else if(parseInt(failRes.headers().status) === 500 ){
+                } else if(parseInt(failRes.status) === 500 ){
                     alert('The server is busy! Please try again later!');
                 }
             });
 
         }, function(failRes){
             console.log(failRes);
-            if(parseInt(failRes.headers().status) === 401 ){
+            if(parseInt(failRes.status) === 401 ){
                 alert('Email or Password is invalid!');
-            } else if(parseInt(failRes.headers().status) === 500 ){
+            } else if(parseInt(failRes.status) === 500 ){
                 alert('The server is busy! Please try again later!');
             }
 
