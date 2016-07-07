@@ -51,7 +51,7 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
 
             console.log('===== obtained token ========');
             console.log($scope.auth);
-           
+
             $http({
                 method: "GET",
                 url: "/contacts",
@@ -81,7 +81,7 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
     }
 
     $scope.logout = function(){
-        var logout = confirm('Do you really want to logou?');
+        var logout = confirm('Do you really want to logout?');
         console.log(logout);
 
         if(logout){

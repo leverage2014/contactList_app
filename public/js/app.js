@@ -1,4 +1,3 @@
-// var contactListApp = angular.module('contactListApp', ['ui.router', 'appControllers', 'ngAnimate', 'ui.bootstrap']);
 var contactListApp = angular.module('contactListApp', ['ui.router', 'appControllers']);
 
 contactListApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider){
