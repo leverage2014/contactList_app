@@ -326,7 +326,11 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', '$cookies', 
     };
 
     $scope.deselect = function(){
-    	$scope.contact = {};
+    	$scope.contact = {
+            name:'',
+            email: '',
+            number:''
+        };
         $scope.addFlag = false;
     }
 

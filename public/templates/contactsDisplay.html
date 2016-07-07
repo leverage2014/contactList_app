@@ -1,30 +1,49 @@
 <div class="container">
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Number</th>
-            <th>Action</th>
-            <th><a href="" ng-click="logout()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> LogOut</a></th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><input class="form-control" ng-model="contact.name"></td>
-            <td><input class="form-control" ng-model="contact.email"></td>
-            <td><input class="form-control" ng-model="contact.number"></td>
-            <td ng-hide='addFlag'><button class="btn btn-primary" ng-click='addContact(contact)' >Add Contact</button></td>
-            <td><button class="btn btn-info" ng-click='updateContact(contact)'>Update Contact</button>&nbsp;&nbsp;<button class="btn btn-info" ng-click='deselect()'>Clear</button></td>
-        </tr>
+    <form name="newContactForm">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Number</th>
+                    <th>Action</th>
+                    <th><a href="" ng-click="logout()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> LogOut</a></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input type="text" name="newContactName" class="form-control" ng-model="contact.name" placeholder="Type contact's name" required>
+                    </td>
+                    <td>
+                        <input type="email" name="newContactEmail" class="form-control" ng-model="contact.email" placeholder="Type contact's email" required>
+                        <span ng-show="newContactForm.newContactEmail.$dirty && newContactForm.newContactEmail.$invalid" class="label label-danger">
+                            Invalid:
+                            <span ng-show="newContactForm.newContactEmail.$error.required">Please input your Email!</span>
+                            <span ng-show="newContactForm.newContactEmail.$error.email">This is not a valid Email.</span>
+                        </span>
+                    </td>
 
-        <tr ng-repeat='one in contactList'>
-            <td>{{one.name}}</td>
-            <td>{{one.email}}</td>
-            <td>{{one.number}}</td>
-            <td><button class="btn btn-danger" ng-click="remove(one._id)">Delete</button></td>
-            <td><button class="btn btn-warning" ng-click="edit(one)">Edit</button></td>
-        </tr>
-        </tbody>
-    </table>
+                    <td>
+                        <input name='newContactNumber' class="form-control" ng-model="contact.number" type="number" placeholder="Type contact's phone number" required>
+                    </td>
+                    <td ng-hide='addFlag'>
+                        <button class="btn btn-primary" ng-click='addContact(contact)' ng-disabled="newContactForm.$invalid">Add Contact</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-info" ng-click='updateContact(contact)' ng-disabled="newContactForm.$invalid">Update Contact</button>&nbsp;&nbsp;
+                        <button class="btn btn-info" ng-click='deselect()'>Clear</button>
+                    </td>
+                </tr>
+
+                <tr ng-repeat='one in contactList'>
+                    <td>{{one.name}}</td>
+                    <td>{{one.email}}</td>
+                    <td>{{one.number}}</td>
+                    <td><button class="btn btn-danger" ng-click="remove(one._id)">Delete</button></td>
+                    <td><button class="btn btn-warning" ng-click="edit(one)">Edit</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
 </div>
