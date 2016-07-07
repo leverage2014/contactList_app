@@ -7,6 +7,6 @@
 * ~~'remember me' in login page~~
 * ~~inactivity detection and automatically logout~~
 * ~~format validation in contacts list~~
-* telephone number format vadidate
+* ~~telephone number format vadidate~~
 * 'forget password' in login page
 * delete tokens periodically in db

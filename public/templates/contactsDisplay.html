@@ -25,7 +25,8 @@
                     </td>
 
                     <td>
-                        <input name='newContactNumber' class="form-control" ng-model="contact.number" type="text" placeholder="Type contact's phone number" required>
+                        <!--<input name='newContactNumber' class="form-control" ng-model="contact.number" type="text" placeholder="Type contact's phone number" required>-->
+                        <input type="text" class="form-control" ng-model="contact.number" ui-mask="(999) 999-9999"  ui-mask-placeholder ui-mask-placeholder-char="_"/>
                     </td>
                     <td ng-hide='addFlag'>
                         <button class="btn btn-primary" ng-click='addContact(contact)' ng-disabled="newContactForm.$invalid">Add Contact</button>
@@ -39,7 +40,7 @@
                 <tr ng-repeat='one in contactList'>
                     <td>{{one.name}}</td>
                     <td>{{one.email}}</td>
-                    <td>{{one.number}}</td>
+                    <td>{{one.number | telephone}}</td>
                     <td><button class="btn btn-danger" ng-click="remove(one._id)">Delete</button></td>
                     <td><button class="btn btn-warning" ng-click="edit(one)">Edit</button></td>
                 </tr>
