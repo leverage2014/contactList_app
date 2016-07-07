@@ -11,7 +11,7 @@
   "author": "yx",
   "license": "ISC",
   "dependencies": {
-//    "angular": "^1.5.7",
+    "angular": "^1.5.7",
     "bcrypt": "^0.8.7",
     "body-parser": "^1.15.2",
     "crypto-js": "^3.1.6",
