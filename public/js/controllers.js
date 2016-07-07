@@ -25,7 +25,7 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', '$cookies', 
         $scope.idleTime = $scope.idleTime + 1;
         console.log("idleTime is " + $scope.idleTime);
 
-        if ($scope.idleTime > 5) { // 25 seconds
+        if ($scope.idleTime > 4) { // 25 seconds
             $http({
                 method: "DELETE",
                 url: "/users/logout",
