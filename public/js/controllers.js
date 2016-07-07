@@ -2,41 +2,19 @@ var appControllers = angular.module('appControllers', ['ui.router']);
 
 appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($scope, $http, $state){
 
-    $scope.location = {};
     $scope.auth = '';
-
-    // $scope.contactList = [{
-    //     name: 'Henry',
-    //     email: 'henry@gmail.com',
-    //     number: '111-111-1111'
-    // }, {
-    //     name: 'Peter',
-    //     email: 'peter@gmail.com',
-    //     number: '222-222-2222'
-    // }];
-
 	$scope.addFlag = false;
 	$scope.contact = {};
-	
-    $scope.getlocation = function(){
-        $http.get('http://ipinfo.io').success(function(data){
-           console.log(data);
-           $scope.location.city = data.city;
-           $scope.location.region = data.region;
-        });
-    }
 
-	$scope.getData = function(){
-        $http.get('/contacts').success(function (response) {
-            console.log("i got the data from server: \n");
-            console.log(response);
-            $scope.contactList = response;
-            $scope.contact = {};
-        });
-	}
-
-   // $scope.getData();
-    $scope.getlocation();
+    //  $scope.location = {};
+    // $scope.getlocation = function(){
+    //     $http.get('http://ipinfo.io').success(function(data){
+    //        console.log(data);
+    //        $scope.location.city = data.city;
+    //        $scope.location.region = data.region;
+    //     });
+    // }
+    // $scope.getlocation();
 
     $scope.createUser = function(user){
         console.log('sign up user');
@@ -61,7 +39,7 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
         console.log(user);
         user.email = '';
         user.password = '';
-        $scope.agreeTerm = false; // no effects
+        $scope.agreeTerm = false; // no effects??
     }
 
     $scope.login = function(user){
@@ -71,6 +49,9 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
         $http.post('/users/login', user).then(function(successRes){
             $scope.auth = successRes.headers().auth;  // obtain Auth info in the HTTP header
 
+            console.log('===== obtained token ========');
+            console.log($scope.auth);
+           
             $http({
                 method: "GET",
                 url: "/contacts",
@@ -100,7 +81,26 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
     }
 
     $scope.logout = function(){
-        alert('logout!');
+        var logout = confirm('Do you really want to logou?');
+        console.log(logout);
+
+        if(logout){
+            $http({
+                method: "DELETE",
+                url: "/users/logout",
+                headers: {
+                    Auth: $scope.auth,  // add Auth to HTTP header
+                }
+            }).then(function(successRes){
+                alert('You have successfully logout!');
+                $scope.auth = ''
+                $state.go('home');
+            }, function(failedRes){
+                alert('The server is busy! Please try again later!');
+            });
+        }
+
+
     }
 
     $scope.addContact = function(){
@@ -149,17 +149,53 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
                 console.log(failRes);
                 alert('The server is busy! Please try again later!');
             });
-
-
         }, function(failedRes){
             console.log(failedRes.data);
         });
     };
 
-    $scope.updateContact = function(){
-        $http.put('/contacts/'+$scope.contact._id, $scope.contact).success(function (response) {
-            $scope.getData();
+    $scope.updateContact = function(user){
+        console.log(user);
+
+        $http({
+            method: "PUT",
+            url: "/contacts/" + user._id,
+            headers: {
+                Auth: $scope.auth,  // add Auth to HTTP header
+                'Content-Type': 'application/json'
+            },
+            data: user
+        }).then(function(successRes){
+            console.log('contact received');
+            console.log(successRes.data);
+
+            // re-obtain the list
+            $http({
+                method: "GET",
+                url: "/contacts",
+                headers: {
+                    Auth: $scope.auth  // add Auth to HTTP header
+                }
+            }).then(function(successRes){
+                console.log('successfull!');
+                console.log(successRes);
+                $scope.contactList = successRes.data;
+
+                console.log('----------');
+                console.log($scope.contactList);
+                $scope.contact = {};
+                $state.go('contacts');
+
+            }, function(failRes){
+                console.log('failed!');
+                console.log(failRes);
+                alert('The server is busy! Please try again later!');
+            });
+        }, function(failedRes){
+            console.log(failedRes.data);
         });
+
+        $scope.contact = {};
         $scope.addFlag = false;
     };
 
@@ -210,9 +246,10 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
     };
 
     $scope.edit = function(one){
-
     	// cut off the connection between selected and input
     	angular.copy(one, $scope.contact);
+        console.log(one);
+
     	$scope.addFlag = true;
     };
 
