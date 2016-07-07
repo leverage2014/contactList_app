@@ -71,7 +71,7 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
             }, function(failRes){
                 console.log('failed!');
                 console.log(failRes);
-                alert('The server is busy! Please try again later!');
+                alert('Email or Password is invalid!');
             });
 
         }, function(failRes){
@@ -112,8 +112,7 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
     		return;
     	}
 
-        console.log('要添加的contact');
-        console.log($scope.contact);
+      //  console.log($scope.contact);
 
         $http({
             method: "POST",
@@ -201,9 +200,6 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
 
     $scope.remove = function(id){
     	console.log(id);
-        // $http.delete('/contacts/'+id).success(function (response) {
-        //     $scope.getData();
-        // });
 
         $http({
             method: "DELETE",
