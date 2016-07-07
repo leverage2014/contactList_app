@@ -92,9 +92,9 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', function($sc
                     Auth: $scope.auth,  // add Auth to HTTP header
                 }
             }).then(function(successRes){
-                alert('You have successfully logout!');
                 $scope.auth = ''
                 $state.go('home');
+                alert('You have successfully logout!');
             }, function(failedRes){
                 alert('The server is busy! Please try again later!');
             });

@@ -4,7 +4,6 @@ html {
 }
 body {
   /* Margin bottom by footer height */
-  /*margin-top: 100px;*/
   padding-top: 100px;
   margin-bottom: 60px;
 }
