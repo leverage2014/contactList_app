@@ -28,7 +28,7 @@
             <div>
                 <a href="#" ui-sref="login">Already have an account? Login now!</a>
             </div>
-            <div ng-show="!agreeTerm" class="label label-warning">
+            <div ng-show="!agreeTerm && !registerForm.$pristine" class="label label-warning">
                 Please read our terms and agreement.
             </div>
 
