@@ -39,7 +39,7 @@
 
                 <tr ng-repeat='one in contactList'
                     ng-style = "{
-                                'background-color': $index = selectedIndex ? 'lightgray': ''
+                                'background-color': $index == selectedIndex ? 'lightgray': ''
                                 }"
                     ng-click = "selectedPerson($index)">
                     <td>{{one.name}}</td>
