@@ -3,8 +3,16 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Email</th>
+                    <th>
+                        Name
+                        <span ng-click="order = 'name" class="glyphicon glyphicon-menu-up"></span>
+                        <span ng-click="order = '-name" class="glyphicon glyphicon-menu-down"></span>
+                    </th>
+                    <th>
+                        Email
+                        <span ng-click="order = 'email" class="glyphicon glyphicon-menu-up"></span>
+                        <span ng-click="order = '-email" class="glyphicon glyphicon-menu-down"></span>
+                    </th>
                     <th>Number</th>
                     <th>Action</th>
                     <th><a href="" ng-click="logout()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> LogOut</a></th>
@@ -37,7 +45,7 @@
                     </td>
                 </tr>
 
-                <tr ng-repeat='one in contactList'
+                <tr ng-repeat='one in contactList | orderBy: order'
                     ng-style = "{
                                 'background-color': $index == selectedIndex ? 'lightgray': ''
                                 }"

@@ -6,6 +6,7 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', '$cookies', 
 	$scope.addFlag = false;
 	$scope.contact = {};
     $scope.user = {};
+    $scope.order = 'name';
 
     $scope.stopTimer = function(){
         $interval.cancel($scope.idleIntervalTimer);
