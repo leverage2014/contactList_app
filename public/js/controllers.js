@@ -12,6 +12,10 @@ appControllers.controller('appCtrls', ['$scope', '$http', '$state', '$cookies', 
     }
     $scope.stopTimer();
 
+    $scope.selectedPerson = function(index){
+        $scope.selectedIndex = index;
+    }
+
     // detect inactivity
     $scope.idleTime = 0;
     $(document).mousemove(function (e) {  // reset $scope.idleTime
