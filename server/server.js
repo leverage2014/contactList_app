@@ -14,7 +14,7 @@ var tokenModel = mydb.tokenModel;
 var middleware = require('./middleware')(tokenModel, userModel);
 
 var PORT = process.env.PORT || 3000;
-app.use('/', express.static(__dirname + '/public'));
+app.use('/', express.static(__dirname + '/src'));
 app.use('/lib', express.static(__dirname + '/node_modules'));
 app.use(bodyParser.json());
 

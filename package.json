@@ -1,31 +1,45 @@
 {
   "name": "contact-list-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+  "description": "### The app is based on MEAN (MongDB, Express, AngularJS and NodeJS) which can be used to record contacts' information. ### The app is already deployed in Heroku: http://goo.gl/sa0hg8",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
   },
-  "repository": {},
-  "author": "yx",
-  "license": "ISC",
   "dependencies": {
-    "angular": "^1.5.7",
-    "bcrypt": "^0.8.7",
-    "body-parser": "^1.15.2",
-    "crypto-js": "^3.1.6",
-    "express": "^4.14.0",
-    "jsonwebtoken": "^7.0.1",
-    "mongoose": "^4.5.3",
-    "underscore": "^1.8.3"
+    "angular": "^1.6.5",
+    "bcrypt": "^1.0.2",
+    "body-parser": "^1.17.2",
+    "crypto-js": "^3.1.9-1",
+    "express": "^4.15.3",
+    "jsonwebtoken": "^7.4.1",
+    "lodash": "^4.17.4",
+    "mongoose": "^4.11.3"
   },
   "devDependencies": {
-    "angular-mocks": "^1.5.7",
-    "jasmine": "^2.4.1",
-    "karma": "^1.1.0",
-    "karma-jasmine": "^1.0.2",
-    "karma-phantomjs-launcher": "^1.0.1",
-    "nodemon": "^1.9.2"
-  }
+    "angular-mocks": "^1.6.5",
+    "gulp": "^3.9.1",
+    "jasmine": "^2.6.0",
+    "jasmine-core": "^2.6.4",
+    "karma": "^1.7.0",
+    "karma-jasmine": "^1.1.0",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "nodemon": "^1.11.0"
+  },
+  "engines": {
+    "node": "~4.4.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leverage2014/contactList_app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leverage2014/contactList_app/issues"
+  },
+  "homepage": "https://github.com/leverage2014/contactList_app#readme"
 }
